@@ -1,0 +1,27 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
+  application:
+    name: api-gateway-service
+  cloud:
+    gateway:
+      routes:
+      - id: booking-service
+        uri: lb://booking-service
+        predicates:
+          - Path=/api/booking-service/**
+        filters:
+          - StripPrefix=1
+          - RewritePath=/booking-service(?<segment>/?.*), $\{segment}
+    config:
+      enabled: true
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        preferIpAddress: true
+        instanceId: ${spring.application.name}:${server.address}:${server.port}
+        port: ${server.port}
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 1s
