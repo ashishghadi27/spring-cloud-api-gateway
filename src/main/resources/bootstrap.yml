@@ -1,0 +1,27 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
+  application:
+    name: api-gateway-service
+  cloud:
+    gateway:
+      routes:
+      - id: auth-service
+        uri: lb://auth-service
+        predicates:
+          - Path=/api/auth-service/**
+        filters:
+          - StripPrefix=1
+          - RewritePath=/auth-service(?<segment>/?.*), $\{segment}
+    config:
+      enabled: true
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        preferIpAddress: true
+        instanceId: ${spring.application.name}:${server.address}:${server.port}
+        port: ${server.port}
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 1s

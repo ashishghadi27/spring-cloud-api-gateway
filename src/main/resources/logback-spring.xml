@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include
+            resource="org/springframework/boot/logging/logback/base.xml" />
+    <logger name="org.springframework" level="warn" />
+    <property name="LOG_PATH" value="${LOG_PATH}" />
+    <springProperty scope="context" name="springAppName"
+                    source="spring.application.name" />
+    <variable name="POD_NAME" value="${POD_NAME}" />
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${POD_NAME}.log</file>
+        <encoder
+                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %p [${springAppName},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{x-jio-session-id:-},%X{x-forwarded-for:-}] %c{3}:[%C{1}:%M:%L] - [%t][%file:%line] - %m%n</pattern>
+            <immediateFlush>true</immediateFlush>
+        </encoder>
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${POD_NAME}_%d{yyyy-MM-dd}_%i.log
+            </fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>500</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <springProfile name="dev">
+        <root level="warn">
+            <appender-ref ref="FILE" />
+        </root>
+        <logger name="com.ril.jio" additivity="false" level="info">
+            <appender-ref ref="FILE" />
+        </logger>
+    </springProfile>
+    <springProfile name="K8S">
+        <root level="warn">
+            <appender-ref ref="FILE" />
+        </root>
+        <logger name="com.ril.jio" additivity="false" level="info">
+            <appender-ref ref="FILE" />
+        </logger>
+    </springProfile>
+    <springProfile name="prod">
+        <root level="warn">
+            <appender-ref ref="FILE" />
+        </root>
+        <logger name="com.ril.jio" additivity="false" level="info">
+            <appender-ref ref="FILE" />
+        </logger>
+    </springProfile>
+
+</configuration>
