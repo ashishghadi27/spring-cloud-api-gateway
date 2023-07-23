@@ -7,13 +7,13 @@ spring:
   cloud:
     gateway:
       routes:
-      - id: booking-service
-        uri: lb://booking-service
+      - id: auth-service
+        uri: lb://auth-service
         predicates:
-          - Path=/api/booking-service/**
+          - Path=/api/auth-service/**
         filters:
           - StripPrefix=1
-          - RewritePath=/booking-service(?<segment>/?.*), $\{segment}
+          - RewritePath=/auth-service(?<segment>/?.*), $\{segment}
     config:
       enabled: true
     consul:
