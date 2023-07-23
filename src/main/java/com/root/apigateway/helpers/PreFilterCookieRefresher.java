@@ -38,7 +38,7 @@ public class PreFilterCookieRefresher {
     public void refreshSessionIfNeeded(ServerHttpRequest serverHttpRequest,
                                                      ServerHttpResponse serverHttpResponse) throws ValidationException {
         String secret = config.getConfigValueByKey("JWT_SECRET");
-        int jwtBufferTime = config.getConfigValueByKey("JWT_BUFFER_TIME", 19);
+        int jwtBufferTime = config.getConfigValueByKey("JWT_BUFFER_TIME", 5);
         int timeout = config.getConfigValueByKey("JWT_TIMEOUT", JWT_DEFAULT_TIMEOUT);
         int cookieTimeout = config.getConfigValueByKey("COOKIE_TIMEOUT", 1080);
 
