@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 import static com.root.apigateway.utils.CommonUtil.*;
 
@@ -31,40 +32,52 @@ public class PreFilterCookieRefresher {
     private final ConsulConfig config;
 
     @Autowired
-    public PreFilterCookieRefresher(ConsulConfig config){
+    public PreFilterCookieRefresher(ConsulConfig config) {
         this.config = config;
     }
 
-    public void refreshSessionIfNeeded(ServerHttpRequest serverHttpRequest,
-                                                     ServerHttpResponse serverHttpResponse) throws ValidationException {
-        String secret = config.getConfigValueByKey("JWT_SECRET");
-        int jwtBufferTime = config.getConfigValueByKey("JWT_BUFFER_TIME", 5);
-        int timeout = config.getConfigValueByKey("JWT_TIMEOUT", JWT_DEFAULT_TIMEOUT);
-        int cookieTimeout = config.getConfigValueByKey("COOKIE_TIMEOUT", 1080);
+    public void refreshSessionIfNeeded(String requestUrl,
+                                       ServerHttpRequest serverHttpRequest,
+                                       ServerHttpResponse serverHttpResponse) throws ValidationException {
+        if (!isJwtByPassedUrl(requestUrl)) {
+            String secret = config.getConfigValueByKey("JWT_SECRET");
+            int jwtBufferTime = config.getConfigValueByKey("JWT_BUFFER_TIME", 5);
+            int timeout = config.getConfigValueByKey("JWT_TIMEOUT", JWT_DEFAULT_TIMEOUT);
+            int cookieTimeout = config.getConfigValueByKey("COOKIE_TIMEOUT", 1080);
 
-        HttpCookie sessionCookie = getSessionCookie(serverHttpRequest);
-        HttpCookie jwtCookie = getJwtCookie(serverHttpRequest);
+            HttpCookie sessionCookie = getSessionCookie(serverHttpRequest);
+            HttpCookie jwtCookie = getJwtCookie(serverHttpRequest);
 
-        Jws<Claims> claims = getJwtClaims(jwtCookie.getValue(), secret);
-        if(claims != null && isValidJwt(claims)){
-            if(isRefreshRequired(claims, jwtBufferTime)){
-                String newJwt = createJWTToken(secret, timeout, claims);
-                serverHttpResponse.addCookie(CommonUtil.getSessionCookie(sessionCookie.getValue(), cookieTimeout));
-                serverHttpResponse.addCookie(CommonUtil.getJwtCookie(newJwt, cookieTimeout));
+            Jws<Claims> claims = getJwtClaims(jwtCookie.getValue(), secret);
+            if (claims != null && isValidJwt(claims)) {
+                if (isRefreshRequired(claims, jwtBufferTime)) {
+                    String newJwt = createJWTToken(secret, timeout, claims);
+                    serverHttpResponse.addCookie(CommonUtil.getSessionCookie(sessionCookie.getValue(), cookieTimeout));
+                    serverHttpResponse.addCookie(CommonUtil.getJwtCookie(newJwt, cookieTimeout));
+                }
+                if(cookieDeleteAllowed(requestUrl)){
+                    serverHttpResponse.addCookie(CommonUtil.getSessionCookie(sessionCookie.getValue(), 0));
+                    serverHttpResponse.addCookie(CommonUtil.getJwtCookie(jwtCookie.getValue(), 0));
+                }
+            } else {
+                throw new ValidationException.Builder().errorMessage(ExceptionConstants.UNAUTHORISED).build();
             }
         }
-        else {
-            throw new ValidationException.Builder().errorMessage(ExceptionConstants.UNAUTHORISED).build();
-        }
+
     }
 
-    private static boolean isRefreshRequired(Jws<Claims> claimsJws, int jwtBufferTime){
+    private boolean cookieDeleteAllowed(String requestUrl) {
+        List<String> cookieRemovalUrls = config.getCookieRemovalUrls();
+        return cookieRemovalUrls.stream().anyMatch(requestUrl::contains);
+    }
+
+    private static boolean isRefreshRequired(Jws<Claims> claimsJws, int jwtBufferTime) {
         Date expiryDate = claimsJws.getBody().getExpiration();
         Date bufferDate = Date.from(Instant.now().minus(jwtBufferTime, ChronoUnit.MINUTES));
         return expiryDate.after(bufferDate);
     }
 
-    private String createJWTToken(String secret, int timeout, Jws<Claims> claims){
+    private String createJWTToken(String secret, int timeout, Jws<Claims> claims) {
 
         Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secret),
                 SignatureAlgorithm.HS256.getJcaName());
@@ -81,5 +94,9 @@ public class PreFilterCookieRefresher {
                 .compact();
     }
 
+    private boolean isJwtByPassedUrl(String requestUrl) {
+        List<String> byPassedUrls = config.getJwtByPassedUrls();
+        return byPassedUrls.stream().anyMatch(requestUrl::contains);
+    }
 
 }

@@ -26,6 +26,18 @@ public class ConsulConfig {
         return jsonArray.toList().stream().map(x -> (String)x).collect(Collectors.toList());
     }
 
+    public List<String> getJwtByPassedUrls(){
+        JSONObject jsonObject = new JSONObject(configProperties);
+        JSONArray jsonArray = jsonObject.optJSONArray("jwtByPassUrls");
+        return jsonArray.toList().stream().map(x -> (String)x).collect(Collectors.toList());
+    }
+
+    public List<String> getCookieRemovalUrls(){
+        JSONObject jsonObject = new JSONObject(configProperties);
+        JSONArray jsonArray = jsonObject.optJSONArray("cookieRemovalUrls");
+        return jsonArray.toList().stream().map(x -> (String)x).collect(Collectors.toList());
+    }
+
     public String getConfigValueByKey(String key){
         return getStringValueFromJson(key);
     }

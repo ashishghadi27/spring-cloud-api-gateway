@@ -6,9 +6,9 @@ node {
         stage('Clone Repo') {
             // for display purposes
             // Get some code from a GitHub repository
-            git url: 'https://gitlab.com/gpranataAsyst/springboot-demodeploy.git',
-                    credentialsId: 'springdeploy-user',
-                    branch: 'main'
+            git url: 'https://github.com/ashishghadi27/spring-cloud-api-gateway.git',
+                    credentialsId: 'githubCred',
+                    branch: 'master'
         }
         stage('Build docker') {
             dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}")

@@ -68,6 +68,7 @@ public final class CommonUtil {
         return ResponseCookie.from("session-id",
                 sessionId).domain("localhost").httpOnly(true).maxAge(cookieTimeout).path("/").build();
     }
+
     public static ResponseCookie getJwtCookie(String jwt, int cookieTimeout){
         return ResponseCookie.from("auth",
                 jwt).domain("localhost").httpOnly(true).maxAge(cookieTimeout).path("/").build();
