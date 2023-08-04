@@ -46,16 +46,16 @@ public class PrePostFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         try{
             ServerHttpRequest serverHttpRequest = exchange.getRequest();
-            String requestUrl = serverHttpRequest.getURI().toString().toLowerCase(Locale.ROOT);
+            String requestUrl = serverHttpRequest.getURI().toString();
             if(isWhiteListedUrl(requestUrl)){
                 serverHttpRequest = prefilterHelper.createSession(serverHttpRequest);
                 ServerWebExchange finalExchange = exchange.mutate().request(serverHttpRequest).build();
                 return chain.filter(finalExchange);
             }
             else {
-                prefilterHelper.validateRequest(serverHttpRequest);
+                prefilterHelper.validateRequest(serverHttpRequest, requestUrl);
                 ServerHttpResponse response = exchange.getResponse();
-                preFilterCookieRefresher.refreshSessionIfNeeded(serverHttpRequest, response);
+                preFilterCookieRefresher.refreshSessionIfNeeded(requestUrl, serverHttpRequest, response);
                 ServerWebExchange finalExchange = exchange.mutate().request(serverHttpRequest).response(response).build();
                 return chain.filter(finalExchange);
             }

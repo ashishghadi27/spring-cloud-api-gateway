@@ -11,6 +11,7 @@ import org.springframework.http.HttpCookie;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.root.apigateway.utils.CommonUtil.*;
@@ -37,12 +38,14 @@ public class PreFilterHelper {
         return serverHttpRequest;
     }
 
-    public void validateRequest(ServerHttpRequest serverHttpRequest) throws ValidationException {
+    public void validateRequest(ServerHttpRequest serverHttpRequest, String requestUrl) throws ValidationException {
         HttpCookie sessionCookie = getSessionCookie(serverHttpRequest);
         validateSession(sessionCookie);
 
-        HttpCookie jwtCookie = getJwtCookie(serverHttpRequest);
-        validateJwt(jwtCookie);
+        if(!isJwtByPassedUrl(requestUrl)){
+            HttpCookie jwtCookie = getJwtCookie(serverHttpRequest);
+            validateJwt(jwtCookie);
+        }
     }
 
     private void validateSession(HttpCookie sessionCookie) throws ValidationException {
@@ -64,7 +67,10 @@ public class PreFilterHelper {
         }
     }
 
-
+    private boolean isJwtByPassedUrl(String requestUrl){
+        List<String> byPassedUrls = config.getJwtByPassedUrls();
+        return byPassedUrls.stream().anyMatch(requestUrl::contains);
+    }
 
 
 }
