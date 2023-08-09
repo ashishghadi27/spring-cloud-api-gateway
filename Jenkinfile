@@ -10,6 +10,10 @@ node {
                     credentialsId: 'githubCred',
                     branch: 'master'
         }
+        stage('Initialize'){
+            def dockerHome = tool 'SpringBootDocker'
+            env.PATH = "${dockerHome}/bin:${env.PATH}"
+        }
         stage('Build docker') {
             dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}")
         }
