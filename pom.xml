@@ -99,7 +99,13 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
+	<repositories>
+		<repository>
+			<id>localrepo</id>
+			<name>Internal Releases</name>
+			<url>http://localhost:8081/repository/localrepo-hosted-release/</url>
+		</repository>
+	</repositories>
 	<build>
 		<plugins>
 			<plugin>
