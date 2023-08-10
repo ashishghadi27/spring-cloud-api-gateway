@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>com.root</groupId>
 			<artifactId>redis</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1-20230809.154010-1</version>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
