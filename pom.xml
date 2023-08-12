@@ -102,8 +102,7 @@
 	<repositories>
 		<repository>
 			<id>localrepo</id>
-			<name>Internal Releases</name>
-			<url>http://localhost:8081/repository/localrepo-hosted-snapshot/</url>
+			<url>http://192.168.29.148:8081/repository/localrepo-hosted-snapshot/</url>
 		</repository>
 	</repositories>
 	<build>
