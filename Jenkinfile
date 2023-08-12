@@ -13,14 +13,11 @@ node {
         stage('Initialize'){
             def dockerHome = tool 'SpringBootDocker'
             env.PATH = "${dockerHome}/bin:${env.PATH}"
-            withMaven {
-                  sh "mvn clean install "
-            }
         }
         stage('Build'){
             withMaven(
                     // Maven installation declared in the Jenkins "Global Tool Configuration"
-                    maven: 'maven-3', // (1)
+                    maven: 'MavenInstallation', // (1)
                     // Use `$WORKSPACE/.repository` for local repository folder to avoid shared repositories
                     mavenLocalRepo: '.repository', // (2)
                     // Maven settings.xml file defined with the Jenkins Config File Provider Plugin
@@ -31,11 +28,13 @@ node {
                 ) {
 
                   // Run the maven build
-                  sh "mvn clean install -DskipTests"
-
+                  bat "echo 'Build maven started'"
+                  bat "mvn clean install -DskipTests"
+                  bat "echo 'Build maven end'"
                 }
         }
         stage('Build docker') {
+            bat "echo 'Build docker started'"
             dockerImage = docker.build("springboot-deploy:${env.BUILD_NUMBER}")
         }
         stage('Deploy docker'){
