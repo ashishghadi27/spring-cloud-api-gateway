@@ -17,7 +17,7 @@ spring:
     config:
       enabled: true
     consul:
-      host: consul
+      host: 192.168.29.148
       port: 8500
       discovery:
         preferIpAddress: true
