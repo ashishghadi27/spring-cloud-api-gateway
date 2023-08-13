@@ -104,6 +104,10 @@
 			<id>localrepo</id>
 			<url>http://localhost:8081/repository/localrepo-hosted-snapshot/</url>
 		</repository>
+		<repository>
+			<id>maven-public</id>
+			<url>http://localhost:8081/repository/maven-public/</url>
+		</repository>
 	</repositories>
 	<build>
 		<plugins>
