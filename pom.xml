@@ -85,7 +85,7 @@
 		<dependency>
 			<groupId>com.root</groupId>
 			<artifactId>common-dependencies</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1-20230827.082419-2</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
