@@ -3,7 +3,7 @@ package com.root.apigateway.filters;
 import com.root.apigateway.configurations.ConsulConfig;
 import com.root.apigateway.helpers.PreFilterCookieRefresher;
 import com.root.apigateway.helpers.PreFilterHelper;
-import com.root.redis.exception.ValidationException;
+import com.root.commondependencies.exception.ValidationException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;

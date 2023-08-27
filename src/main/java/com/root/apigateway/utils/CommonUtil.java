@@ -2,8 +2,8 @@ package com.root.apigateway.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.root.redis.constants.ExceptionConstants;
-import com.root.redis.exception.ValidationException;
+import com.root.commondependencies.constants.ExceptionConstants;
+import com.root.commondependencies.exception.ValidationException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

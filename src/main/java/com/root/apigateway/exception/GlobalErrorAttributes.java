@@ -2,9 +2,9 @@ package com.root.apigateway.exception;
 
 
 import com.root.apigateway.utils.CommonUtil;
-import com.root.redis.constants.ExceptionConstants;
-import com.root.redis.exception.ValidationException;
-import com.root.redis.vo.ErrorVO;
+import com.root.commondependencies.constants.ExceptionConstants;
+import com.root.commondependencies.exception.ValidationException;
+import com.root.commondependencies.vo.ErrorVO;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;

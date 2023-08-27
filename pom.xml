@@ -61,11 +61,6 @@
 			<artifactId>spring-cloud-starter-bootstrap</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.root</groupId>
-			<artifactId>redis</artifactId>
-			<version>0.0.1-20230809.154010-1</version>
-		</dependency>
-		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
 			<version>0.11.1</version>
@@ -87,6 +82,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.root</groupId>
+			<artifactId>common-dependencies</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -103,6 +103,10 @@
 		<repository>
 			<id>localrepo</id>
 			<url>http://localhost:8081/repository/localrepo-hosted-snapshot/</url>
+		</repository>
+		<repository>
+			<id>maven-public</id>
+			<url>http://localhost:8081/repository/maven-public/</url>
 		</repository>
 	</repositories>
 	<build>
