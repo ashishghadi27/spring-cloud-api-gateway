@@ -23,6 +23,6 @@ spring:
         preferIpAddress: true
         instanceId: ${spring.application.name}:${server.address}:${server.port}
         port: ${server.port}
-        health-check-url: 192.168.64.122/actuator/health
+        healthCheckUrl: 192.168.64.122:8085/actuator/health
         #healthCheckPath: /actuator/health
         healthCheckInterval: 1s
