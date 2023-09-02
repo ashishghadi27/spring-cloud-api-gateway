@@ -23,5 +23,6 @@ spring:
         preferIpAddress: true
         instanceId: ${spring.application.name}:${server.address}:${server.port}
         port: ${server.port}
+        health-check-ip: 192.168.29.148
         healthCheckPath: /actuator/health
         healthCheckInterval: 1s
