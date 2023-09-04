@@ -17,12 +17,12 @@ spring:
     config:
       enabled: true
     consul:
-      host: 192.168.29.148
+      host: host.docker.internal
       port: 8500
       discovery:
         preferIpAddress: true
         instanceId: ${spring.application.name}:${server.address}:${server.port}
         port: ${server.port}
-        healthCheckUrl: http://192.168.29.148:8085/actuator/health
+        healthCheckUrl: http://localhost:8085/actuator/health
         #healthCheckPath: /actuator/health
         healthCheckInterval: 1s
